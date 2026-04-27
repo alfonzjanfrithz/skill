@@ -1,6 +1,6 @@
 ---
-name: to-prd
-description: Turn the current conversation context into a PRD in the format that User requested. Use when user wants to create a PRD from the current context.
+name: write-prd
+description: Turn the current conversation context into a PRD in the format that user requested. Use when user wants to create a PRD from the current context.
 ---
 
 This skill takes the current conversation context and codebase understanding and produces a PRD. Do NOT interview the user — just synthesize what you already know.
@@ -17,4 +17,4 @@ Check with the user that these modules match their expectations. Check with the 
 
 3. Write the PRD using the template described in [PRD_TEMPLATE.md](PRD_TEMPLATE.md).
 
-4. Write it in the format described in [PRD_FORMAT.md](PRD_FORMAT.md).
+4. Write it in the location and format described in [PRD_FORMAT.md](PRD_FORMAT.md).
