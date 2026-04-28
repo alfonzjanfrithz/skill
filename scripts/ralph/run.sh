@@ -1,8 +1,4 @@
 #!/bin/bash
-
-# Ralph - Claude Code Runner
-# Loads project context (issues, commits, prompts) and passes them to Claude Code.
-
 # Gather open issues from the issues/ directory
 issues=$(cat issues/*.md 2>/dev/null || echo "No issues found")
 
