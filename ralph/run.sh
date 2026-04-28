@@ -15,7 +15,7 @@ feedback_loops=$(cat ralph/feedback-loops.md)
 git_commit=$(cat ralph/git-commit.md)
 
 # Run Claude Code with auto-accept edits, injecting all context into the prompt
-claude --permission-mode acceptEdits \
+echo --permission-mode acceptEdits \
   "Previous commits: $commits
 
 Issues: $issues
