@@ -37,8 +37,8 @@ resolve_tool_paths() {
   case "$tool" in
     cursor)
       TOOL_DISPLAY_NAME="Cursor"
-      TOOL_GLOBAL_DIR="${CURSOR_GLOBAL_DIR:-$HOME/.cursor/rules}"
-      TOOL_PROJECT_SUBDIR="${CURSOR_PROJECT_SUBDIR:-.cursor/rules}"
+      TOOL_GLOBAL_DIR="${CURSOR_GLOBAL_DIR:-$HOME/.cursor/skills}"
+      TOOL_PROJECT_SUBDIR="${CURSOR_PROJECT_SUBDIR:-.cursor/skills}"
       ;;
     claude)
       TOOL_DISPLAY_NAME="Claude"
