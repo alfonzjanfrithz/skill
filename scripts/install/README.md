@@ -8,17 +8,25 @@ Simple install entrypoints for each supported tool:
 - `install-copilot.sh`
 - `install-github-copilot.sh` (alias of `install-copilot.sh`)
 
-Each script supports exactly one of these modes:
+Each script supports exactly one target mode plus optional selectors:
 
 ```bash
 ./scripts/install/install-cursor.sh --global
+./scripts/install/install-cursor.sh --global workflow
+./scripts/install/install-cursor.sh --global excalidraw
+./scripts/install/install-cursor.sh --global workflow excalidraw
 ./scripts/install/install-cursor.sh --project-location /path/to/project
+./scripts/install/install-cursor.sh --project-location /path/to/project workflow
 ```
 
 ## Behavior
 
 - `--global` installs into the tool's global folder.
 - `--project-location <path>` installs into a project-local folder.
+- Optional selectors can be provided after the mode:
+  - group name under `dotskill/` (for example `workflow`, `workflow-support`, `utilities`)
+  - skill name (for example `excalidraw`, `tdd`, `write-prd`)
+- If no selector is provided, all skills are installed.
 - Missing folders are created automatically.
 - Re-running a script replaces each installed skill folder with the current version from `dotskill/`.
 
@@ -39,4 +47,3 @@ If you want different destinations, set environment variables before running a s
 - Claude: `CLAUDE_GLOBAL_DIR`, `CLAUDE_PROJECT_SUBDIR`
 - OpenCode: `OPENCODE_GLOBAL_DIR`, `OPENCODE_PROJECT_SUBDIR`
 - Copilot: `COPILOT_GLOBAL_DIR`, `COPILOT_PROJECT_SUBDIR`
-

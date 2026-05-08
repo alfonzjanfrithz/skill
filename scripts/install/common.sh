@@ -4,6 +4,8 @@ set -euo pipefail
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(CDPATH= cd -- "${SCRIPT_DIR}/../.." && pwd)"
 SOURCE_DIR="${REPO_ROOT}/dotskill"
+declare -a SELECTORS=()
+declare -a SKILLS_TO_COPY=()
 
 fail() {
   printf 'Error: %s\n' "$1" >&2
@@ -15,10 +17,17 @@ usage_for_tool() {
 
   cat <<EOF
 Usage:
-  $(basename "$0") --global
-  $(basename "$0") --project-location <path>
+  $(basename "$0") [--global] [selector ...]
+  $(basename "$0") --project-location <path> [selector ...]
 
 Installs the shared skills for ${tool_display_name}.
+
+Selectors can be either:
+- a group folder under dotskill/ (for example: workflow)
+- an individual skill name (for example: excalidraw)
+
+If no selector is provided, all skills are installed.
+If no mode is provided, global install is used.
 
 Options:
   --global                   Install into the tool's global folder
@@ -69,17 +78,18 @@ parse_install_args() {
 
   INSTALL_MODE=""
   TARGET_ROOT=""
+  SELECTORS=()
   local project_location=""
 
   while [ $# -gt 0 ]; do
     case "$1" in
       --global)
-        [ -z "$INSTALL_MODE" ] || fail "Pass either --global or --project-location, not both"
+        [ -z "$INSTALL_MODE" ] || [ "$INSTALL_MODE" = "global" ] || fail "Pass either --global or --project-location, not both"
         INSTALL_MODE="global"
         shift
         ;;
       --project-location)
-        [ -z "$INSTALL_MODE" ] || fail "Pass either --global or --project-location, not both"
+        [ -z "$INSTALL_MODE" ] || [ "$INSTALL_MODE" = "project" ] || fail "Pass either --global or --project-location, not both"
         [ $# -ge 2 ] || fail "--project-location requires a path"
         INSTALL_MODE="project"
         project_location="$2"
@@ -89,13 +99,25 @@ parse_install_args() {
         usage_for_tool "$TOOL_DISPLAY_NAME"
         exit 0
         ;;
-      *)
+      --)
+        shift
+        while [ $# -gt 0 ]; do
+          SELECTORS+=("$1")
+          shift
+        done
+        break
+        ;;
+      -*)
         fail "Unknown argument: $1"
+        ;;
+      *)
+        SELECTORS+=("$1")
+        shift
         ;;
     esac
   done
 
-  [ -n "$INSTALL_MODE" ] || fail "Pass --global or --project-location <path>"
+  [ -n "$INSTALL_MODE" ] || INSTALL_MODE="global"
 
   if [ "$INSTALL_MODE" = "global" ]; then
     TARGET_ROOT="$TOOL_GLOBAL_DIR"
@@ -106,15 +128,111 @@ parse_install_args() {
   fi
 }
 
+add_skill_dir_if_missing() {
+  local skill_dir="$1"
+  local existing=""
+
+  for existing in "${SKILLS_TO_COPY[@]-}"; do
+    [ "$existing" = "$skill_dir" ] && return
+  done
+
+  SKILLS_TO_COPY+=("$skill_dir")
+}
+
+add_all_skills() {
+  local group_dir=""
+  local child_dir=""
+
+  for group_dir in "$SOURCE_DIR"/*; do
+    [ -d "$group_dir" ] || continue
+
+    if [ -f "$group_dir/SKILL.md" ]; then
+      add_skill_dir_if_missing "$group_dir"
+      continue
+    fi
+
+    for child_dir in "$group_dir"/*; do
+      [ -d "$child_dir" ] || continue
+      [ -f "$child_dir/SKILL.md" ] || continue
+      add_skill_dir_if_missing "$child_dir"
+    done
+  done
+}
+
+add_group_skills() {
+  local group_name="$1"
+  local group_dir="$SOURCE_DIR/$group_name"
+  local child_dir=""
+  local found_any=0
+
+  [ -d "$group_dir" ] || return 1
+
+  if [ -f "$group_dir/SKILL.md" ]; then
+    add_skill_dir_if_missing "$group_dir"
+    return 0
+  fi
+
+  for child_dir in "$group_dir"/*; do
+    [ -d "$child_dir" ] || continue
+    [ -f "$child_dir/SKILL.md" ] || continue
+    add_skill_dir_if_missing "$child_dir"
+    found_any=1
+  done
+
+  [ "$found_any" -eq 1 ]
+}
+
+add_skill_by_name() {
+  local skill_name="$1"
+  local group_dir=""
+  local candidate=""
+  local matches=0
+
+  for group_dir in "$SOURCE_DIR"/*; do
+    [ -d "$group_dir" ] || continue
+
+    candidate="$group_dir/$skill_name"
+    if [ -d "$candidate" ] && [ -f "$candidate/SKILL.md" ]; then
+      matches=$((matches + 1))
+      add_skill_dir_if_missing "$candidate"
+    fi
+  done
+
+  if [ "$matches" -gt 1 ]; then
+    fail "Selector '$skill_name' is ambiguous across multiple groups"
+  fi
+
+  [ "$matches" -eq 1 ]
+}
+
+resolve_skills_to_copy() {
+  local selector=""
+
+  SKILLS_TO_COPY=()
+
+  if [ "${#SELECTORS[@]:-0}" -eq 0 ]; then
+    add_all_skills
+    return
+  fi
+
+  for selector in "${SELECTORS[@]-}"; do
+    add_group_skills "$selector" && continue
+    add_skill_by_name "$selector" && continue
+    fail "Unknown selector '$selector'. Use a group folder or a skill name."
+  done
+}
+
 copy_skills_into_target() {
   local target_root="$1"
   local skill_dir=""
   local skill_name=""
 
   mkdir -p "$target_root"
+  resolve_skills_to_copy
 
-  for skill_dir in "$SOURCE_DIR"/*; do
-    [ -d "$skill_dir" ] || continue
+  [ "${#SKILLS_TO_COPY[@]:-0}" -gt 0 ] || fail "No skills resolved for installation"
+
+  for skill_dir in "${SKILLS_TO_COPY[@]-}"; do
 
     skill_name="$(basename "$skill_dir")"
     rm -rf "$target_root/$skill_name"
@@ -133,4 +251,3 @@ install_tool() {
 
   printf 'Installed %s skills into %s\n' "$TOOL_DISPLAY_NAME" "$TARGET_ROOT"
 }
-
