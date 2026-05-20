@@ -2,6 +2,13 @@
 
 Make a git commit after completing a task or before pausing.
 
+Commit format:
+```
+<ticket-id> <short-description>
+
+<details>
+```
+
 The commit message must:
 
 - Include key decisions made

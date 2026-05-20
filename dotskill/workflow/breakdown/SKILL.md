@@ -77,7 +77,12 @@ A concise description of this vertical slice. Describe the end-to-end behavior, 
 
 ## Blocked by
 
-- Blocked by `issues/NNN-title.md` (if any)
+- Blocked by `issues/<ticket-id>/NNN-title.md` (if any)
+
+## Type
+
+- AFK  — can be implemented and merged without human interaction
+- HITL — requires human interaction (e.g. architectural decision, design review)
 
 Or "None - can start immediately" if no blockers.
 

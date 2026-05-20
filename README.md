@@ -49,9 +49,22 @@ vet → write-prd → breakdown → ralph (run.sh) → [loop]
 1. **vet** — Think through a plan. Get grilled until the design concept is solid.
 2. **write-prd** — Turn the vetted conversation into a written PRD.
 3. **breakdown** — Split the PRD into independently workable issues (tracer bullets).
-4. **ralph** — Execute via `run.sh`. Picks AFK issues, implements with TDD behind the scenes, runs feedback loops, and commits.
+4. **ralph** — Execute via `run.sh`. Picks AFK issues, implements with TDD behind the scenes, runs feedback loops, and commits. Requires `cursor-agent` or `opencode` installed, plus skills installed via `scripts/install/install-<tool>.sh`. See [`scripts/ralph/README.md`](scripts/ralph/README.md) for the full guide.
 
 **As needed**, inject **glossarize**, **domain-model**, or **deepen** whenever language drifts, architecture friction appears, or context gaps emerge.
+
+### Running ralph
+
+```bash
+./scripts/ralph/run.sh                  # loop with cursor-agent (default)
+./scripts/ralph/run.sh --agent opencode # loop with opencode
+./scripts/ralph/run.sh --once           # single iteration
+./scripts/ralph/run.sh --echo           # just print the prompt
+```
+
+The loop stops when the agent emits `<promise>NO MORE TASKS</promise>`, when
+`--once` is set, or on Ctrl-C. See [`scripts/ralph/README.md`](scripts/ralph/README.md)
+for prerequisites, flags, and logs.
 
 Then loop back when new code introduces new concepts or friction.
 

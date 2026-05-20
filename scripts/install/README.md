@@ -47,3 +47,8 @@ If you want different destinations, set environment variables before running a s
 - Claude: `CLAUDE_GLOBAL_DIR`, `CLAUDE_PROJECT_SUBDIR`
 - OpenCode: `OPENCODE_GLOBAL_DIR`, `OPENCODE_PROJECT_SUBDIR`
 - Copilot: `COPILOT_GLOBAL_DIR`, `COPILOT_PROJECT_SUBDIR`
+
+## Next: run the autonomous loop
+
+Once skills are installed, see [`../ralph/README.md`](../ralph/README.md) for
+how to drive `cursor-agent` or `opencode` through the Ralph task loop.

@@ -1,8 +1,8 @@
 # ISSUES
 
-Local issue files from `issues/` are provided at start of context. Parse them to understand the open issues.
+Local issue files from `issues/<ticket-id>/` are provided at start of context. Parse them to understand the open issues.
 
-You will work on the AFK issues only, not the HITL ones.
+You will work on the AFK issues only, not the HITL ones. Skip any issue whose `## Type` field is `HITL`.
 
 You've also been passed a file containing the last few commits. Review these to understand what work has been done.
 
@@ -32,7 +32,7 @@ Explore the repo.
 
 # IMPLEMENTATION
 
-Use /tdd to complete the task.
+Use the TDD workflow to complete the task. The full instructions live in `dotskill/workflow/tdd/SKILL.md` — read it before starting. If your environment also supports the `/tdd` slash command (e.g. OpenCode), invoking it loads the same skill.
 
 # FEEDBACK LOOPS
 
@@ -44,7 +44,7 @@ Make a git commit following the guidelines in `git-commit.md`.
 
 # THE ISSUE
 
-If the task is complete, move the issue file to `issues/done/`.
+If the task is complete, move the issue file to `issues/<ticket-id>/done/`.
 
 If the task is not complete, add a note to the issue file with what was done.
 
