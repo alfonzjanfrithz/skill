@@ -6,7 +6,7 @@ description: Interview the user relentlessly about a plan or design until reachi
 * Interview me relentlessly about every aspect of this plan until we reach a shared understanding.
 * Walk down each branch of the design tree, resolving dependencies between decisions one-by-one.
 * For each question, provide your recommended answer.
-* Ask the questions one at a time.
+* Ask the questions one at a time. Unless user explicitly asks you to ask multiple questions at once, do not ask more than one question at a time. Even if you ask multiple question at once, you need to ask only those that have separate design branches. Do not ask multiple questions that are on the same branch of the decision tree.
 * Ask the most important questions first. A question is important if its answer changes other decisions
 * If you can find the answer by exploring the code, explore the codebase indead.
 * Do not start execute any plans/write any code unless you are explicitly asked.

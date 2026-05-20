@@ -11,7 +11,7 @@ Break a PRD into independently-grabbable issues using vertical slices (tracer bu
 
 ### 1. Locate the PRD
 
-Ask the user for the PRD file path (e.g. `issues/prd.md`).
+Ask the user for the PRD file path (e.g. `issues/prd.md`, `issues/ticket/prd.md`).
 
 If the PRD is not already in your context window, read it from the file.
 
@@ -36,6 +36,7 @@ Slices may be 'HITL' or 'AFK'. HITL slices require human interaction, such as an
 Present the proposed breakdown as a numbered list. For each slice, show:
 
 - **Title**: short descriptive name
+- **Description**: Description how is the vertical slices looks like, in a way that user can easily understand what is the end-to-end behavior of the slice, without describing layer-by-layer implementation details. E.g what is the demo-able parts.
 - **Type**: HITL / AFK
 - **Blocked by**: which other slices (if any) must complete first
 - **User stories covered**: which user stories from the PRD this addresses
@@ -51,18 +52,18 @@ Iterate until the user approves the breakdown.
 
 ### 5. Create the issue files
 
-For each approved slice, write a markdown file in `issues/` using the naming pattern `issues/NNN-short-title.md` (e.g. `issues/001-add-user-auth.md`).
+For each approved slice, write a markdown file in `issues/<ticket-id>` using the naming pattern `issues/<ticket-id>/NNN-short-title.md` (e.g. `issues/EOL-12312/001-add-user-auth.md`).
 
 Number issues starting from the next available number (check what files already exist in `issues/`).
 
 Create files in dependency order (blockers first) so you can reference real filenames in the "Blocked by" field.
 
-Do NOT use `gh issue create` or any GitHub CLI commands. Do NOT reference GitHub issue numbers. Use local filenames for all cross-references.
+Use local filenames for all cross-references.
 
 <issue-template>
 ## Parent PRD
 
-`issues/prd.md` (or whichever PRD file was used)
+`issues/<ticket-id>/prd.md` (or whichever PRD file was used)
 
 ## What to build
 
