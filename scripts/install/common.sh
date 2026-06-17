@@ -210,7 +210,7 @@ resolve_skills_to_copy() {
 
   SKILLS_TO_COPY=()
 
-  if [ "${#SELECTORS[@]:-0}" -eq 0 ]; then
+  if [ "${#SELECTORS[@]}" -eq 0 ]; then
     add_all_skills
     return
   fi
@@ -230,7 +230,7 @@ copy_skills_into_target() {
   mkdir -p "$target_root"
   resolve_skills_to_copy
 
-  [ "${#SKILLS_TO_COPY[@]:-0}" -gt 0 ] || fail "No skills resolved for installation"
+  [ "${#SKILLS_TO_COPY[@]}" -gt 0 ] || fail "No skills resolved for installation"
 
   for skill_dir in "${SKILLS_TO_COPY[@]-}"; do
 
