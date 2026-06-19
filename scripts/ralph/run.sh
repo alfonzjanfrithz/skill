@@ -7,6 +7,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 REPO_ROOT="$(CDPATH= cd -- "${SCRIPT_DIR}/../.." && pwd)"
+WORKTREE_ROOT="$REPO_ROOT"
 
 AGENT="cursor"
 ONCE=0
@@ -16,7 +17,7 @@ TICKET_ID=""
 usage() {
   cat <<EOF
 Usage:
-  $(basename "$0") --ticket-id <id> [--agent cursor|opencode] [--once] [--echo] [-h|--help]
+  $(basename "$0") --ticket-id <id> [--repo-root <path>] [--agent cursor|opencode] [--once] [--echo] [-h|--help]
 
 Drives a CLI agent through Ralph's prompt loop for a single ticket.
 
@@ -24,6 +25,7 @@ Required:
   --ticket-id <id>   The ticket directory under issues/ (e.g. EOL-12312)
 
 Options:
+  --repo-root <path> Path to the target git repository (worktree). Defaults to the skill repo.
   --agent <name>     Which agent CLI to drive. cursor (default) | opencode
   --once             Run a single iteration, then exit
   --echo             Print the assembled prompt to stdout and exit (no agent)
@@ -34,8 +36,8 @@ Prerequisites:
       cursor   -> cursor-agent
       opencode -> opencode
   - Skills must be installed for the agent. See scripts/install/README.md
-  - Must be run from inside the repo, on a non-main/master branch
-  - Issues must exist under issues/<ticket-id>/NNN-*.md (created by breakdown)
+  - The target repo must be on a non-main/master branch
+  - Issues must exist under <repo-root>/issues/<ticket-id>/NNN-*.md (created by breakdown)
 EOF
 }
 
@@ -50,6 +52,11 @@ parse_args() {
       --ticket-id)
         [ $# -ge 2 ] || die "--ticket-id requires a value"
         TICKET_ID="$2"
+        shift 2
+        ;;
+      --repo-root)
+        [ $# -ge 2 ] || die "--repo-root requires a path"
+        WORKTREE_ROOT="$2"
         shift 2
         ;;
       --agent)
@@ -83,6 +90,12 @@ parse_args() {
   if [ -z "$TICKET_ID" ] && [ "$ECHO_ONLY" -eq 0 ]; then
     die "--ticket-id is required. Use --echo to print the prompt without a ticket."
   fi
+
+  if [ "$ECHO_ONLY" -eq 0 ]; then
+    [ -d "$WORKTREE_ROOT" ] || die "--repo-root does not exist: $WORKTREE_ROOT"
+    git -C "$WORKTREE_ROOT" rev-parse --git-dir >/dev/null 2>&1 \
+      || die "--repo-root is not a git repository: $WORKTREE_ROOT"
+  fi
 }
 
 require_agent_installed() {
@@ -100,7 +113,7 @@ require_agent_installed() {
 
 check_branch() {
   local branch
-  branch=$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null) \
+  branch=$(git -C "$WORKTREE_ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null) \
     || die "Not inside a git repository"
   case "$branch" in
     main|master)
@@ -110,7 +123,7 @@ check_branch() {
 }
 
 gather_issues() {
-  local ticket_dir="$REPO_ROOT/issues/$TICKET_ID"
+  local ticket_dir="$WORKTREE_ROOT/issues/$TICKET_ID"
   local file
   local output=""
 
@@ -144,12 +157,14 @@ build_prompt() {
     issues="No ticket specified (--echo mode)"
   fi
 
-  commits=$(git -C "$REPO_ROOT" log -n 5 --format="%H%n%ad%n%B---" --date=short 2>/dev/null || echo "No commits found")
+  commits=$(git -C "$WORKTREE_ROOT" log -n 5 --format="%H%n%ad%n%B---" --date=short 2>/dev/null || echo "No commits found")
   prompt=$(cat "$SCRIPT_DIR/prompt.md")
   feedback_loops=$(cat "$SCRIPT_DIR/feedback-loops.md")
   git_commit=$(cat "$SCRIPT_DIR/git-commit.md")
 
   cat <<EOF
+Project directory: $WORKTREE_ROOT
+
 Previous commits: $commits
 
 Ticket: ${TICKET_ID:-<none>}
@@ -189,7 +204,7 @@ main() {
   require_agent_installed
   check_branch
 
-  local ticket_dir="$REPO_ROOT/issues/$TICKET_ID"
+  local ticket_dir="$WORKTREE_ROOT/issues/$TICKET_ID"
   if [ ! -d "$ticket_dir" ]; then
     die "Ticket directory not found: $ticket_dir"
   fi

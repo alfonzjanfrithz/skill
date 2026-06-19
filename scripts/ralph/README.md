@@ -25,7 +25,9 @@ non-interactive mode. The loop continues until the agent emits
    contains the tracer-bullet tasks you want Ralph to work through.
    Expected format: `issues/<ticket-id>/NNN-short-title.md`.
 
-4. **Be on a feature branch.** `run.sh` refuses to run on `main` or `master`.
+4. **Be on a feature branch** in the target repo. `run.sh` refuses to run on `main` or `master`.
+
+> **Tip:** You can keep the skill repo and Ralph in one place (e.g. `~/IdeaProjects/skill`) and use `--repo-root` to drive work in any other git worktree without copying files.
 
 ## Usage
 
@@ -36,6 +38,9 @@ non-interactive mode. The loop continues until the agent emits
 ./scripts/ralph/run.sh --ticket-id EOL-12312 --once
 ./scripts/ralph/run.sh --ticket-id EOL-12312 --echo
 ./scripts/ralph/run.sh --help
+
+# Target a different repo (e.g. a git worktree)
+./scripts/ralph/run.sh --repo-root ~/Codebase/provisioning-service --ticket-id EOL-12312 --agent opencode
 ```
 
 ### Flags
@@ -43,6 +48,7 @@ non-interactive mode. The loop continues until the agent emits
 | Flag | Effect |
 | --- | --- |
 | `--ticket-id <id>` | **Required.** The ticket directory under `issues/` to work on. |
+| `--repo-root <path>` | Path to the target git repository. Defaults to the skill repo itself. |
 | `--agent cursor\|opencode` | Pick which CLI to drive. Default: `cursor`. |
 | `--once` | Run a single iteration and exit. Good for testing prompt changes. |
 | `--echo` | Print the assembled prompt to stdout and exit. No agent invoked, no branch check, no ticket validation. Useful for debugging prompts. |

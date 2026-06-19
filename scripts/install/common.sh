@@ -6,6 +6,7 @@ REPO_ROOT="$(CDPATH= cd -- "${SCRIPT_DIR}/../.." && pwd)"
 SOURCE_DIR="${REPO_ROOT}/dotskill"
 declare -a SELECTORS=()
 declare -a SKILLS_TO_COPY=()
+SYMLINK=0
 
 fail() {
   printf 'Error: %s\n' "$1" >&2
@@ -32,6 +33,7 @@ If no mode is provided, global install is used.
 Options:
   --global                   Install into the tool's global folder
   --project-location <path>  Install into a project-local folder
+  --symlink                  Create symlinks instead of copying (live updates from dotskill/)
   -h, --help                 Show this help
 EOF
 }
@@ -79,6 +81,7 @@ parse_install_args() {
   INSTALL_MODE=""
   TARGET_ROOT=""
   SELECTORS=()
+  SYMLINK=0
   local project_location=""
 
   while [ $# -gt 0 ]; do
@@ -94,6 +97,10 @@ parse_install_args() {
         INSTALL_MODE="project"
         project_location="$2"
         shift 2
+        ;;
+      --symlink)
+        SYMLINK=1
+        shift
         ;;
       -h|--help)
         usage_for_tool "$TOOL_DISPLAY_NAME"
@@ -236,8 +243,12 @@ copy_skills_into_target() {
 
     skill_name="$(basename "$skill_dir")"
     rm -rf "$target_root/$skill_name"
-    mkdir -p "$target_root/$skill_name"
-    cp -R "$skill_dir"/. "$target_root/$skill_name"/
+    if [ "$SYMLINK" -eq 1 ]; then
+      ln -sfn "$skill_dir" "$target_root/$skill_name"
+    else
+      mkdir -p "$target_root/$skill_name"
+      cp -R "$skill_dir"/. "$target_root/$skill_name"/
+    fi
   done
 }
 
@@ -249,5 +260,9 @@ install_tool() {
   parse_install_args "$tool" "$@"
   copy_skills_into_target "$TARGET_ROOT"
 
-  printf 'Installed %s skills into %s\n' "$TOOL_DISPLAY_NAME" "$TARGET_ROOT"
+  if [ "$SYMLINK" -eq 1 ]; then
+    printf 'Symlinked %s skills into %s\n' "$TOOL_DISPLAY_NAME" "$TARGET_ROOT"
+  else
+    printf 'Installed %s skills into %s\n' "$TOOL_DISPLAY_NAME" "$TARGET_ROOT"
+  fi
 }

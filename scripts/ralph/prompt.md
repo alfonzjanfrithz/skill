@@ -8,6 +8,10 @@ You've also been passed a file containing the last few commits. Review these to 
 
 If all AFK tasks are complete, output <promise>NO MORE TASKS</promise>.
 
+# PROJECT DIRECTORY
+
+The "Project directory" is listed at the top of this prompt. Before exploring or making changes, ensure you are working in that directory.
+
 # TASK SELECTION
 
 Pick the next task. Prioritize tasks in this order:

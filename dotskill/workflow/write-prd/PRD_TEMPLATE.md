@@ -19,6 +19,7 @@ As a mobile bank customer, I want to see balance on my accounts, so that I can m
 ```
 
 This list of user stories should be extremely extensive and cover all aspects of the feature.
+Do not use imaginary specific actor if you dont understand for sure, just use a generic one if you are unsure.
 
 ## Implementation Decisions
 

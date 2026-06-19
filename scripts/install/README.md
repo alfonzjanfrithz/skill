@@ -17,24 +17,29 @@ Each script supports exactly one target mode plus optional selectors:
 ./scripts/install/install-cursor.sh --global workflow excalidraw
 ./scripts/install/install-cursor.sh --project-location /path/to/project
 ./scripts/install/install-cursor.sh --project-location /path/to/project workflow
+
+# Live symlinks (changes in dotskill/ are reflected immediately)
+./scripts/install/install-opencode.sh --global --symlink
+./scripts/install/install-cursor.sh --global --symlink workflow
 ```
 
 ## Behavior
 
 - `--global` installs into the tool's global folder.
 - `--project-location <path>` installs into a project-local folder.
+- `--symlink` creates symlinks instead of copying. Use this when you want the installed skills to stay in sync with `dotskill/` as you edit them.
 - Optional selectors can be provided after the mode:
   - group name under `dotskill/` (for example `workflow`, `workflow-support`, `utilities`)
   - skill name (for example `excalidraw`, `tdd`, `write-prd`)
 - If no selector is provided, all skills are installed.
 - Missing folders are created automatically.
-- Re-running a script replaces each installed skill folder with the current version from `dotskill/`.
+- Re-running a script replaces each installed skill folder (or symlink) with the current version from `dotskill/`.
 
 ## Default destinations
 
 | Tool | Global | Project-local |
 | --- | --- | --- |
-| Cursor | `~/.cursor/rules` | `.cursor/rules` |
+| Cursor | `~/.cursor/skills` | `.cursor/skills` |
 | Claude | `~/.claude/skills` | `.claude/skills` |
 | OpenCode | `~/.config/opencode/skills` | `.opencode/skills` |
 | GitHub Copilot | `~/.config/github-copilot/skills` | `.github/copilot/skills` |
