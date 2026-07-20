@@ -52,7 +52,7 @@ Iterate until the user approves the breakdown.
 
 ### 5. Create the issue files
 
-For each approved slice, write a markdown file in `issues/<ticket-id>` using the naming pattern `issues/<ticket-id>/NNN-short-title.md` (e.g. `issues/EOL-12312/001-add-user-auth.md`).
+For each approved slice, write a markdown file in `issues/<ticket-id>` using the naming pattern `issues/<ticket-id>/NNN-short-title.md` (e.g. `issues/PROJ-12312/001-add-user-auth.md`).
 
 Number issues starting from the next available number (check what files already exist in `issues/`).
 
