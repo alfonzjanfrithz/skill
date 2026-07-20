@@ -33,14 +33,14 @@ non-interactive mode. The loop continues until the agent emits
 
 ```bash
 # Required: specify the ticket directory under issues/
-./scripts/ralph/run.sh --ticket-id EOL-12312
-./scripts/ralph/run.sh --ticket-id EOL-12312 --agent opencode
-./scripts/ralph/run.sh --ticket-id EOL-12312 --once
-./scripts/ralph/run.sh --ticket-id EOL-12312 --echo
+./scripts/ralph/run.sh --ticket-id PROJ-12312
+./scripts/ralph/run.sh --ticket-id PROJ-12312 --agent opencode
+./scripts/ralph/run.sh --ticket-id PROJ-12312 --once
+./scripts/ralph/run.sh --ticket-id PROJ-12312 --echo
 ./scripts/ralph/run.sh --help
 
 # Target a different repo (e.g. a git worktree)
-./scripts/ralph/run.sh --repo-root ~/Codebase/provisioning-service --ticket-id EOL-12312 --agent opencode
+./scripts/ralph/run.sh --repo-root ~/Codebase/provisioning-service --ticket-id PROJ-12312 --agent opencode
 ```
 
 ### Flags

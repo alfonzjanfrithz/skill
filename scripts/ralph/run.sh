@@ -22,7 +22,7 @@ Usage:
 Drives a CLI agent through Ralph's prompt loop for a single ticket.
 
 Required:
-  --ticket-id <id>   The ticket directory under issues/ (e.g. EOL-12312)
+  --ticket-id <id>   The ticket directory under issues/ (e.g. PROJ-12312)
 
 Options:
   --repo-root <path> Path to the target git repository (worktree). Defaults to the skill repo.
