@@ -60,7 +60,7 @@ Collect as much real evidence as is available. Never invent any of it.
 
 ### Ticket / issue context (capability detection, with fallbacks)
 
-The PR usually references an issue tracker key — most often Jira (e.g. `EOL-26559`), but
+The PR usually references an issue tracker key — most often Jira (e.g. `PROJ-26559`), but
 possibly GitHub/GitLab issues, Linear, etc. Look in the branch name, PR title/description,
 and commit messages. **This skill does not require any specific tracker integration.** Walk
 this ladder and use the first option that works; never invent ticket content.
@@ -154,7 +154,7 @@ Mermaid, and code highlighting. Do not edit its CSS/JS.
 
 Replace these placeholders:
 - `{{TITLE}}` — e.g. `PR Review: <short PR title>`.
-- `{{SUBTITLE}}` — one plain line, e.g. `EOL-26559 · 14 files · branch feature/x → develop`.
+- `{{SUBTITLE}}` — one plain line, e.g. `PROJ-26559 · 14 files · branch feature/x → develop`.
 - `{{PURPOSE}}` — `PR Review Briefing`.
 - `{{DATE}}` — today's date, `YYYY-MM-DD` (it is given in your context; do not shell out).
 - `{{BODY}}` — the body HTML below.
@@ -200,7 +200,7 @@ padding them.
 ## Step 5 — Write the file and report back
 
 1. Write to the current working directory, named in kebab-case from the PR/ticket, e.g.
-   `./pr-review-EOL-26559.html`. Use the user's path if they gave one.
+   `./pr-review-PROJ-26559.html`. Use the user's path if they gave one.
 2. Tell the user: the file path, how to open it (`open <file>` on macOS), the overall risk
    level and a one-line headline of the top finding, and that Mermaid + highlight.js load
    from a CDN (first open needs internet).
