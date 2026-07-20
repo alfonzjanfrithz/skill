@@ -1,0 +1,14 @@
+# Composite Resource (XR) — Crossplane v2
+# Namespaced by default; no separate Claim exists in v2.
+apiVersion: platform.acme.io/v1alpha1
+kind: XDatabase
+metadata:
+  name: my-db
+  namespace: team-a
+spec:
+  region: us-east-2
+  size: small
+  # Optional: pick a specific Composition
+  # crossplane:
+  #   compositionRef:
+  #     name: xdatabases.platform.acme.io
